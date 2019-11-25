@@ -1,7 +1,8 @@
 'use strict'
 const express = require('express');
 const bodyParser = require("body-parser");
-const getHTML = require('html-get');
+// const getHTML = require('html-get');
+const browserless = require('browserless')()
 const check_emails_existences = require('./APIs/check_emails')
 
 const app = express();
@@ -28,9 +29,10 @@ app.get('/emailseEestences', (req, res) => {
 //* get html by url
 app.post('/getHTML', (req, res) => {
     (async () => {
-        const { url, html, stats } = await getHTML(req.body.url)
-        // console.log(url, stats, html.length)
-        res.send(JSON.stringify(html))  
+        // const { url, html, stats } = await getHTML(req.body.url)
+        // res.send(JSON.stringify(html))
+        const html = await browserless.text(req.body.url)
+        res.send(JSON.stringify(html))
     })()
 });
 
