@@ -1,9 +1,8 @@
 'use strict'
 const express = require('express');
 const bodyParser = require("body-parser");
-// const getHTML = require('html-get');
-const browserless = require('browserless')()
-const check_emails_existences = require('./APIs/check_emails')
+const request = require('request');
+const cheerio = require('cheerio')
 
 const app = express();
 app.use(bodyParser.json());
@@ -29,10 +28,10 @@ app.get('/emailseEestences', (req, res) => {
 //* get html by url
 app.post('/getHTML', (req, res) => {
     (async () => {
-        // const { url, html, stats } = await getHTML(req.body.url)
-        // res.send(JSON.stringify(html))
-        const html = await browserless.text(req.body.url)
-        res.send(JSON.stringify(html))
+        request(req.body.url, function (error, response, body) {
+            const $ = cheerio.load(body)
+            res.send(JSON.stringify($.text()));
+        });
     })()
 });
 
